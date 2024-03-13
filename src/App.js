@@ -2,6 +2,7 @@ import React from "react";
 import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
 import Home from "./pages/Home";
+import SignIn from "./pages/SignIn";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -26,11 +27,12 @@ function App() {
     createRoutesFromElements(
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} loader={productsData}></Route>
+        <Route path="/signin" element={<SignIn />}></Route>
       </Route>
     )
   );
   return (
-    <div className="font-bodyFont">
+    <div className="font-bodyFont bg-gray-100">
       <RouterProvider router={router}></RouterProvider>
     </div>
   );

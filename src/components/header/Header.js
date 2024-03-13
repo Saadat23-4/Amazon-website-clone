@@ -7,13 +7,14 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import HeaderBottom from "../HeaderBottom";
+import { Link } from "react-router-dom";
 
 function Header() {
   const [showAll, setShowAll] = useState(false);
 
   return (
     <div className="w-full sticky top-0 z-50">
-      <div className="max-w-container bg-amazon_blue  text-white px-4 py-3 flex items-center gap-4">
+      <div className=" bg-amazon_blue  text-white px-4 py-3 flex items-center gap-4">
         {/* ===========Image Start here=========== */}
         <div className="headerHover">
           <img className="w-24 mt-2" src={logo} alt="logo" />
@@ -21,7 +22,7 @@ function Header() {
         {/* ==============Image end here============*/}
 
         {/* ===========Delivery option============= */}
-        <div className="headerHover">
+        <div className="headerHover hidden mdl:inline-flex">
           <LocationOnIcon />
           <p className="text-sm text-ligtText font-light flex flex-col">
             Deliver to{" "}
@@ -33,7 +34,7 @@ function Header() {
         {/* ===========Delivery end here=========== */}
 
         {/* ===========Search start here===========*/}
-        <div className="h-10 rounded-md flex flex-grow relative ">
+        <div className="h-10 rounded-md hidden lgl:flex flex-grow relative ">
           <span
             onClick={() => setShowAll(!showAll)}
             className="w-14 h-full bg-gray-200 hover:bg-gray-300 border-2 cursor-pointer duration-300 text-sm text-amazon_blue font-titleFont flex items-center justify-center rounded-tl-md rounded-bl-md"
@@ -68,15 +69,19 @@ function Header() {
         {/* =============Search end here========= */}
 
         {/* =============Sign In start here====== */}
-        <div className="flex flex-col items-start justify-center headerHover">
-          <p className="text-xs text-lightText font-light">Hello</p>
-          <p className="text-sm font-semibold -mt-1 text-whiteText">
-            Accounts and Lists{" "}
-            <span>
-              <ArrowDropDownIcon />
-            </span>
-          </p>
-        </div>
+        <Link to="/signin">
+          <div className="hidden lgl:flex flex-col items-start justify-center headerHover">
+            <p className="text-sm mdl:text-xs text-white mdl:text-lightText font-light">
+              Hello
+            </p>
+            <p className="text-sm font-semibold -mt-1 text-whiteText hidden mdl:inline-flex">
+              Accounts and Lists{" "}
+              <span>
+                <ArrowDropDownIcon />
+              </span>
+            </p>
+          </div>
+        </Link>
         {/* =============Sign In end here====== */}
 
         {/* =============Orders start here====== */}

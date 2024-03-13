@@ -3,7 +3,7 @@ import React from "react";
 function FooterMiddleList({ title, listItem }) {
   console.log(listItem);
   return (
-    <div>
+    <div className="w-full">
       <h3 className="font-titleFont text-white text-base font-semibold mb-3">
         {title}
       </h3>
