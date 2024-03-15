@@ -1,4 +1,5 @@
 import logo from "./logo.png";
+import darkLogo from "./darkLogo.png";
 import bannerImgOne from "./banner/bannerImgTwo.jpg";
 import bannerImgTwo from "./banner/bannerImgOne.jpg";
 import bannerImgThree from "./banner/bannerImgThree.jpg";
@@ -8,6 +9,7 @@ import chFlag from "./chFlag.png";
 
 export {
   logo,
+  darkLogo,
   bannerImgOne,
   bannerImgTwo,
   bannerImgThree,

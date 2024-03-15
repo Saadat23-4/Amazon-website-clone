@@ -11,6 +11,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { productsData } from "./api/api";
+import Registration from "./pages/Registration";
 
 const Layout = () => {
   return (
@@ -28,6 +29,7 @@ function App() {
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} loader={productsData}></Route>
         <Route path="/signin" element={<SignIn />}></Route>
+        <Route path="/registration" element={<Registration />}></Route>
       </Route>
     )
   );
