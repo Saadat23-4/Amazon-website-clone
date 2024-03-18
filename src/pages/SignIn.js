@@ -1,9 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { darkLogo } from "../assets/index";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import { Password } from "@mui/icons-material";
 
 function SignIn() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errEmail, setErrEmail] = useState("");
+  const [errPassword, setErrPassword] = useState("");
+
+  const handleEmail = (e) => {
+    setEmail(e.target.value);
+    setErrEmail("");
+  };
+
+  const handlePassword = (e) => {
+    setPassword(e.target.value);
+    setErrPassword("");
+  };
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (!email) {
+      setErrEmail("Enter Your Email");
+    }
+    if (!password) {
+      setErrPassword("Enter Your Password");
+    }
+    if (email && password) {
+      console.log(email, password);
+      setEmail("");
+      setPassword("");
+    }
+  };
+
   return (
     <div className="w-full bg-gray-100 ">
       <form className="w-[350px] mx-auto flex flex-col items-center">
@@ -16,19 +47,33 @@ function SignIn() {
                 Email or Mobile phone number
               </p>
               <input
+                onChange={handleEmail}
+                value={email}
                 className="w-full lowercase py-1 border border-zinc-400 px-2 text-base rounded-sm outline-none focus-within:border-[#e77600] focus-within:shadow-amazonInput duration-100"
                 type="email"
               />
+              {errEmail && (
+                <p className="text-red-600 text-xs font-semibold tracking-wide flex items-center gap-2 -mt-1.5 ">
+                  {errEmail}
+                </p>
+              )}
             </div>
             <div className="flex flex-col gap-2">
               <p className="text-sm font-medium ">Password</p>
               <input
+                onChange={handlePassword}
+                value={password}
                 className="w-full lowercase py-1 border border-zinc-400 px-2 text-base rounded-sm outline-none focus-within:border-[#e77600] focus-within:shadow-amazonInput duration-100"
                 type="password"
               />
+              {errPassword && (
+                <p className="text-red-600 text-xs font-semibold tracking-wide flex items-center gap-2 -mt-1.5 ">
+                  {errPassword}
+                </p>
+              )}
             </div>
             <button
-              onClick={(e) => e.preventDefault()}
+              onClick={handleLogin}
               className="w-full py-1.5 text-sm font-normal rounded-sm bg-gradient-to-t from-[#f7dfa5] to-[#f0c14b] hover:bg-gradient-to-b border border-zinc-400 active:border-yellow-800 active:shadow-amazonInput"
             >
               Continue

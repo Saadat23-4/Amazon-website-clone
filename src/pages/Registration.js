@@ -36,6 +36,12 @@ function Registration() {
     setErrCPassword("");
   };
 
+  //=======Email Validation========
+  const emailValidation = (clientEmail) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(clientEmail);
+  };
+
   //=======Submit button==========
   const handleRegistration = (e) => {
     e.preventDefault();
@@ -44,12 +50,16 @@ function Registration() {
     }
     if (!clientEmail) {
       setErrClientEmail("Enter your email!");
+    } else {
+      if (!emailValidation(clientEmail)) {
+        setErrClientEmail("Enter a valid email");
+      }
     }
     if (!clientPassword) {
       setErrClientPassword("Enter your password!");
     } else {
       if (clientPassword.length < 6) {
-        setErrCPassword("Password must be at least 6 characters");
+        setErrClientPassword("Password must be at least 6 characters");
       }
     }
     if (!cPassword) {
@@ -58,6 +68,21 @@ function Registration() {
       if (cPassword !== clientPassword) {
         setErrCPassword("Password not match");
       }
+    }
+
+    if (
+      clientName &&
+      clientEmail &&
+      emailValidation(clientEmail) &&
+      clientPassword &&
+      clientPassword.length >= 6 &&
+      cPassword === clientPassword
+    ) {
+      console.log(clientName, clientEmail, clientPassword, cPassword);
+      setClientEmail("");
+      setClientName("");
+      setClientPassword("");
+      setCPassword("");
     }
   };
 
@@ -75,7 +100,8 @@ function Registration() {
                 <p className="text-sm font-medium ">Your Name:</p>
                 <input
                   onChange={handleName}
-                  className="w-full lowercase py-1 border border-zinc-400 px-2 text-base rounded-sm outline-none focus-within:border-[#e77600] focus-within:shadow-amazonInput duration-100"
+                  value={clientName}
+                  className="w-full py-1 border border-zinc-400 px-2 text-base rounded-sm outline-none focus-within:border-[#e77600] focus-within:shadow-amazonInput duration-100"
                   type="text"
                 />
                 {errClientName && (
@@ -89,7 +115,8 @@ function Registration() {
                   </p>
                   <input
                     onChange={handleEmail}
-                    className="w-full lowercase py-1 border border-zinc-400 px-2 text-base rounded-sm outline-none focus-within:border-[#e77600] focus-within:shadow-amazonInput duration-100"
+                    value={clientEmail}
+                    className="w-full py-1 border border-zinc-400 px-2 text-base rounded-sm outline-none focus-within:border-[#e77600] focus-within:shadow-amazonInput duration-100"
                     type="email"
                   />
                   {errClientEmail && (
@@ -102,7 +129,8 @@ function Registration() {
                   <p className="text-sm font-medium ">Password</p>
                   <input
                     onChange={handlePassword}
-                    className="w-full lowercase py-1 border border-zinc-400 px-2 text-base rounded-sm outline-none focus-within:border-[#e77600] focus-within:shadow-amazonInput duration-100"
+                    value={clientPassword}
+                    className="w-full py-1 border border-zinc-400 px-2 text-base rounded-sm outline-none focus-within:border-[#e77600] focus-within:shadow-amazonInput duration-100"
                     type="password"
                   />
                   {errClientPassword && (
@@ -115,6 +143,7 @@ function Registration() {
                   <p className="text-sm font-medium ">Re-enter password</p>
                   <input
                     onChange={handleCPassword}
+                    value={cPassword}
                     className="w-full lowercase py-1 border border-zinc-400 px-2 text-base rounded-sm outline-none focus-within:border-[#e77600] focus-within:shadow-amazonInput duration-100"
                     type="password"
                   />
