@@ -1,9 +1,18 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 import { darkLogo } from "../assets/index";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import { RotatingLines } from "react-loader-spinner";
+import { motion } from "framer-motion";
 
 function Registration() {
+  const navigate = useNavigate();
+  const auth = getAuth();
   const [clientName, setClientName] = useState("");
   const [clientEmail, setClientEmail] = useState("");
   const [clientPassword, setClientPassword] = useState("");
@@ -14,6 +23,10 @@ function Registration() {
   const [errClientEmail, setErrClientEmail] = useState("");
   const [errClientPassword, setErrClientPassword] = useState("");
   const [errCPassword, setErrCPassword] = useState("");
+  const [firebaseErr, setFirebaseErr] = useState("");
+  //======Loading State start here==========
+  const [loading, setLoading] = useState(false);
+  const [succesMsg, setSuccesMsg] = useState("");
 
   //====Handle Function===============
   const handleName = (e) => {
@@ -50,6 +63,7 @@ function Registration() {
     }
     if (!clientEmail) {
       setErrClientEmail("Enter your email!");
+      setFirebaseErr("");
     } else {
       if (!emailValidation(clientEmail)) {
         setErrClientEmail("Enter a valid email");
@@ -78,11 +92,36 @@ function Registration() {
       clientPassword.length >= 6 &&
       cPassword === clientPassword
     ) {
-      console.log(clientName, clientEmail, clientPassword, cPassword);
+      setLoading(true);
+      createUserWithEmailAndPassword(auth, clientEmail, clientPassword)
+        .then((userCredential) => {
+          updateProfile(auth.currentUser, {
+            displayName: clientName,
+            photoURL:
+              "https://unsplash.com/photos/woman-holding-red-flower-TWB035qnbQs",
+          });
+          // Signed up
+          const user = userCredential.user;
+          console.log(user);
+          setLoading(false);
+          setSuccesMsg("Account Created Succesfully!");
+          setTimeout(() => {
+            navigate("/signin");
+          }, 3000);
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+
+          if (errorCode.includes("auth/email-already-in-use")) {
+            setFirebaseErr("Email already in use, try another one");
+          }
+        });
+
       setClientEmail("");
       setClientName("");
       setClientPassword("");
       setCPassword("");
+      setFirebaseErr("");
     }
   };
 
@@ -119,9 +158,9 @@ function Registration() {
                     className="w-full py-1 border border-zinc-400 px-2 text-base rounded-sm outline-none focus-within:border-[#e77600] focus-within:shadow-amazonInput duration-100"
                     type="email"
                   />
-                  {errClientEmail && (
+                  {firebaseErr && (
                     <p className="text-red-600 text-xs font-semibold tracking-wide flex items-center gap-2 -mt-1.5">
-                      {errClientEmail}
+                      {firebaseErr}
                     </p>
                   )}
                 </div>
@@ -162,6 +201,29 @@ function Registration() {
                 >
                   Continue
                 </button>
+                {loading && (
+                  <div className="flex justify-center">
+                    <RotatingLines
+                      strokeColor="#febd69"
+                      strokeWidth="5"
+                      animationDuration="0.75"
+                      width="50"
+                      visible={true}
+                    />
+                  </div>
+                )}
+                {succesMsg && (
+                  <div>
+                    <motion.p
+                      initial={{ y: 10, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ duration: 0.5 }}
+                      className="text-base font-titleFont font-semibold text-green-500 border-[1px] border-green-500 px-2 text-center"
+                    >
+                      {succesMsg}
+                    </motion.p>
+                  </div>
+                )}
               </div>
               <p className="text-xs text-black leading-4 mt-3">
                 By creating, you agree to Amazon's{" "}
