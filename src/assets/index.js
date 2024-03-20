@@ -6,6 +6,7 @@ import bannerImgThree from "./banner/bannerImgThree.jpg";
 import bannerImgFour from "./banner/bannerImgFour.jpg";
 import bannerImgFive from "./banner/bannerImgFive.jpg";
 import chFlag from "./chFlag.png";
+import emptyCart from "./emptyCart.png";
 
 export {
   logo,
@@ -16,4 +17,5 @@ export {
   bannerImgFour,
   bannerImgFive,
   chFlag,
+  emptyCart,
 };
