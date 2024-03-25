@@ -1,18 +1,47 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { getAuth, signOut } from "firebase/auth";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { allItems } from "../../constants/index";
 import { logo } from "../../assets/index";
-import { Home, LocationOnOutlined } from "@mui/icons-material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import SearchIcon from "@mui/icons-material/Search";
+import LogoutIcon from "@mui/icons-material/Logout";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import HeaderBottom from "../HeaderBottom";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { userSignout } from "../../redux/amazonSlice";
 
 function Header() {
-  const [showAll, setShowAll] = useState(false);
+  const auth = getAuth();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const products = useSelector((state) => state.amazon.products);
+  const userInfo = useSelector((state) => state.amazon.userInfo);
+  const ref = useRef();
+  const [showAll, setShowAll] = useState(false);
+
+  useEffect(() => {
+    document.body.addEventListener("click", (e) => {
+      if (e.target.contains(ref.current)) {
+        showAll && setShowAll(false);
+      }
+    });
+  }, [ref, showAll]);
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+    setTimeout(() => {
+      signOut(auth)
+        .then(() => {
+          dispatch(userSignout());
+          navigate("/signin");
+        })
+        .catch((error) => {
+          console.log(error, "Error");
+        });
+    }, 2000);
+  };
 
   return (
     <div className="w-full sticky top-0 z-50">
@@ -24,7 +53,6 @@ function Header() {
           </div>
         </Link>
         {/* ==============Image end here============*/}
-
         {/* ===========Delivery option============= */}
         <div className="headerHover hidden mdl:inline-flex">
           <LocationOnIcon />
@@ -36,7 +64,6 @@ function Header() {
           </p>
         </div>
         {/* ===========Delivery end here=========== */}
-
         {/* ===========Search start here===========*/}
         <div className="h-10 rounded-md hidden lgl:flex flex-grow relative ">
           <span
@@ -71,13 +98,19 @@ function Header() {
           </span>
         </div>
         {/* =============Search end here========= */}
-
         {/* =============Sign In start here====== */}
         <Link to="/signin">
           <div className="hidden lgl:flex flex-col items-start justify-center headerHover">
-            <p className="text-sm mdl:text-xs text-white mdl:text-lightText font-light">
-              Hello
-            </p>
+            {userInfo ? (
+              <p className="text-sm mdl:text-xs text-gray-100 mdl:text-lightText font-medium">
+                {userInfo.userName}
+              </p>
+            ) : (
+              <p className="text-sm mdl:text-xs text-white mdl:text-lightText font-light">
+                Hello, signin
+              </p>
+            )}
+
             <p className="text-sm font-semibold -mt-1 text-whiteText hidden mdl:inline-flex">
               Accounts and Lists{" "}
               <span>
@@ -87,14 +120,12 @@ function Header() {
           </div>
         </Link>
         {/* =============Sign In end here====== */}
-
         {/* =============Orders start here====== */}
         <div className="flex flex-col items-start justify-center headerHover">
           <p className="text-xs text-lightText font-light">Returns</p>
           <p className="text-sm font-semibold -mt-1 text-whiteText">&Orders</p>
         </div>
         {/* =============Orders end here====== */}
-
         {/* ===========ShoppingCart start here===== */}
         <Link to="/cart">
           <div className="flex items-start justify-center headerHover relative">
@@ -108,6 +139,20 @@ function Header() {
           </div>
         </Link>
         {/* ===========ShoppingCart end here===== */}
+        {/* ========Sign Out start Here========= */}
+        <Link to="/signin">
+          {userInfo && (
+            <div
+              onClick={handleLogout}
+              className="flex flex-col justify-center items-center headerHover relative"
+            >
+              <LogoutIcon />
+              <p className="hidden mdl:inline-flex text-xs font-semibold text-whiteText">
+                Log out
+              </p>
+            </div>
+          )}
+        </Link>
       </div>
       <HeaderBottom />
     </div>
